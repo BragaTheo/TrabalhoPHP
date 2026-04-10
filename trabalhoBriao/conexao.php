@@ -54,5 +54,6 @@ function getConexao() {
     }
 
     return $con;
+    // entrega a conexao pra outros arquivos
 }
 ?>
