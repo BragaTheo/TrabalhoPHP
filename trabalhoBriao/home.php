@@ -2,12 +2,13 @@
 
 require_once 'conexao.php';
 $con = getConexao();
-
+// conecta ao banco
 $busca = isset($_GET['busca']) ? trim($_GET['busca']) : '';
 $ordenar = isset($_GET['ordenar']) ? $_GET['ordenar'] : 'd.nome';
 $ordem = isset($_GET['ordem']) && strtoupper($_GET['ordem']) === 'DESC' ? 'DESC' : 'ASC';
-
+// deixa buscar por nome, modelo e ordenar a tabela
 $colunas_validas = ['d.nome','a.modelo','a.preco','a.ano'];
+// evita sql injection
 if (!in_array($ordenar, $colunas_validas)) {
     $ordenar = 'd.nome';
 }
@@ -15,7 +16,7 @@ if (!in_array($ordenar, $colunas_validas)) {
 $sql = "SELECT a.id AS auto_id, a.modelo, a.ano, a.preco, a.quantidade, d.id AS dono_id, d.nome, d.telefone, d.email
         FROM automoveis a
         JOIN donos d ON a.dono_id = d.id";
-
+// junta carro com dono
 $params = [];
 if ($busca !== '') {
     $sql .= " WHERE d.nome LIKE ? OR a.modelo LIKE ?";
@@ -25,7 +26,7 @@ if ($busca !== '') {
 }
 
 $sql .= " ORDER BY $ordenar $ordem";
-
+// ordena
 $stmt = mysqli_prepare($con, $sql);
 if ($stmt === false) {
     die("Erro na preparação da consulta: " . mysqli_error($con));
@@ -78,17 +79,19 @@ $result = mysqli_stmt_get_result($stmt);
       <tbody>
         <?php if ($result && mysqli_num_rows($result) > 0): ?>
           <?php while($row = mysqli_fetch_assoc($result)): ?>
+    <!-- tabela html que mostra dono, modelo, ano, preço, etc -->
             <tr>
               <td><?php echo htmlspecialchars($row['nome']); ?></td>
               <td><?php echo htmlspecialchars($row['modelo']); ?></td>
               <td><?php echo htmlspecialchars($row['ano']); ?></td>
-              <td>R$ <?php echo number_format($row['preco'], 2, ',', '.'); ?></td>
+              <td>R$ <?php echo number_format($row['preco'], 2, ',', '.'); ?></td> 
               <td><?php echo (int)$row['quantidade']; ?></td>
               <td>R$ <?php echo number_format($row['preco'] * $row['quantidade'], 2, ',', '.'); ?></td>
-              <td>
+              <td> 
                 <a href="processamento.php?action=edit_auto&id=<?php echo $row['auto_id']; ?>">Editar</a> |
                 <a href="processamento.php?action=delete_auto&id=<?php echo $row['auto_id']; ?>" onclick="return confirm('Excluir automóvel?');">Excluir</a> |
                 <a href="processamento.php?action=edit_dono&id=<?php echo $row['dono_id']; ?>">Editar Dono</a>
+                  <!-- chama processamento.php pra executar essas acoes -->
               </td>
             </tr>
           <?php endwhile; ?>
@@ -104,6 +107,7 @@ $result = mysqli_stmt_get_result($stmt);
                   FROM donos d
                   LEFT JOIN automoveis a ON a.dono_id = d.id
                   GROUP BY d.id, d.nome";
+// quanto cada dono tem em carros
     $resResumo = mysqli_query($con, $sqlResumo);
     ?>
     <table>
