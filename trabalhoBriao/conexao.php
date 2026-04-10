@@ -6,7 +6,7 @@ define('DB_PASS', '');
 define('DB_NAME', 'aulaprog');
 
 function getConexao() {
-    
+    // funcao que conecta no mysql e cria um banco se nao existir, e cria tabelas se nao existirem
     $con = mysqli_connect(DB_HOST, DB_USER, DB_PASS);
     if (!$con) {
         die("Falha na conexão ao servidor MySQL: " . mysqli_connect_error());
