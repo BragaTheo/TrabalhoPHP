@@ -1,5 +1,5 @@
 <?php
-
+// pagina principal e navegacao do codigo, faz os botoes funcionarem
 ?>
 <!doctype html>
 <html lang="pt-BR">
