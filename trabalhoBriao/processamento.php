@@ -3,7 +3,7 @@
 require_once 'conexao.php';
 $con = getConexao();
 $action = isset($_GET['action']) ? $_GET['action'] : '';
-
+// identifica acao
 function redirect($url) {
     header("Location: $url");
     exit;
@@ -12,6 +12,7 @@ function redirect($url) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($action === 'form_dono') {
         ?>
+        <!-- mostra formulario -->
         <!doctype html>
         <html lang="pt-BR">
         <head><meta charset="utf-8"><title>Cadastrar Dono</title><link rel="stylesheet" href="estilo.css"></head>
@@ -38,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($action === 'form_auto') {
         $donos = mysqli_query($con, "SELECT id, nome FROM donos ORDER BY nome");
         ?>
+        <!-- busca donos e cria select -->
         <!doctype html>
         <html lang="pt-BR">
         <head><meta charset="utf-8"><title>Cadastrar Automóvel</title><link rel="stylesheet" href="estilo.css"></head>
@@ -76,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $dono = mysqli_fetch_assoc($res);
         if (!$dono) redirect('home.php');
         ?>
+            <!-- busca dados e preenche formulario -->
         <!doctype html>
         <html lang="pt-BR">
         <head><meta charset="utf-8"><title>Editar Dono</title><link rel="stylesheet" href="estilo.css"></head>
@@ -158,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     redirect('home.php');
+    // sempre volta pra lista
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
